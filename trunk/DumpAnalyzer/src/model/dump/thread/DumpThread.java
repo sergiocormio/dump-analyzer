@@ -146,6 +146,6 @@ public class DumpThread {
 	
 	@Override
 	public String toString() {
-		return "# of Descendants: " + getNumberOfDescendants() + " Name=" + name + " Id=" + id + " State=" + state + (lock!=null? " Lock=" + lock:"");
+		return  "Id=" + id +" Name=" + name + " State=" + state + (lock!=null? " Lock=" + lock:"") + " # of Descendants: " + getNumberOfDescendants();
 	}
 }
