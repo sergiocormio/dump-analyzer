@@ -11,11 +11,16 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import resources.ResourcesFactory;
 
 public class AboutDialog extends JDialog {
 
+	private static final String EMAIL = "sergiocormio@gmail.com";
+	private static final String YEAR_AND_CREATOR = "2014 - Sergio A. Cormio";
+	private static final String DESCRIPTION = "This is a simple Analyzer of Tomcat's dump files. Made in JAVA using Swing.";
+	private static final String NAME_AND_VERSION = "Dump Analyzer Version 1.0";
 	/**
 	 * 
 	 */
@@ -55,6 +60,7 @@ public class AboutDialog extends JDialog {
 	private void createMainPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBorder(new EmptyBorder(0, 5, 5, 5));
 		Font boldFont = new Font("Arial", Font.BOLD,14);
 		Font normalFont = new Font("Courier", Font.PLAIN,12);
 		//Image
@@ -62,24 +68,27 @@ public class AboutDialog extends JDialog {
 		appImageLabel.setAlignmentX(CENTER_ALIGNMENT);
 		panel.add(appImageLabel);
 		//Name and version
-		JLabel nameAndVersionLabel = new JLabel("Dump Analyzer Version 1.0");
+		JLabel nameAndVersionLabel = new JLabel(NAME_AND_VERSION);
 		nameAndVersionLabel.setAlignmentX(CENTER_ALIGNMENT);
 		nameAndVersionLabel.setFont(boldFont);
 		panel.add(nameAndVersionLabel);
+		//Description
+		JLabel descriptionLabel = new JLabel(DESCRIPTION);
+		descriptionLabel.setAlignmentX(CENTER_ALIGNMENT);
+		descriptionLabel.setFont(normalFont);
+		panel.add(descriptionLabel);
 		//space filler
 		panel.add(Box.createRigidArea(new Dimension(0,12)));
 		//year and creator
-		JLabel yearAndCreatorLabel = new JLabel("2014 - Sergio A. Cormio");
+		JLabel yearAndCreatorLabel = new JLabel(YEAR_AND_CREATOR);
 		yearAndCreatorLabel.setAlignmentX(CENTER_ALIGNMENT);
 		yearAndCreatorLabel.setFont(normalFont);
 		panel.add(yearAndCreatorLabel);
 		//email
-		JLabel emailLabel = new JLabel("sergiocormio@gmail.com");
+		JLabel emailLabel = new JLabel(EMAIL);
 		emailLabel.setAlignmentX(CENTER_ALIGNMENT);
 		emailLabel.setFont(normalFont);
 		panel.add(emailLabel);
-		//space filler
-		panel.add(Box.createRigidArea(new Dimension(0,5)));
 		this.add(panel);
 	}
 
