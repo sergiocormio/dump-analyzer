@@ -108,7 +108,7 @@ public class DumpTreePanel extends JPanel {
 	
 	private void addChildrenToJTree(DumpThread fatherNode, DefaultMutableTreeNode fatherJTreeNode) {
 		DefaultMutableTreeNode childJTreeNode = null;
-		for(DumpThread childNode : fatherNode.getChildren()){
+		for(DumpThread childNode : fatherNode.getSortedChildren()){
 			childJTreeNode = new DefaultMutableTreeNode(childNode);
 			fatherJTreeNode.add(childJTreeNode);
 			if(childNode.getChildrenQuantity()>0){

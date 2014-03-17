@@ -1,5 +1,8 @@
 package model.dump.thread;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -147,5 +150,19 @@ public class DumpThread {
 	@Override
 	public String toString() {
 		return  "Id=" + id +" Name=" + name + " State=" + state + (lock!=null? " Lock=" + lock:"") + " # of Descendants: " + getNumberOfDescendants();
+	}
+
+	/**
+	 * Devuelve una lista ordenadas de los threads hijos
+	 * @return
+	 */
+	public List<DumpThread> getSortedChildren() {
+		List<DumpThread> threadsList = new ArrayList<DumpThread>();
+		for(DumpThread thread : children){
+			threadsList.add(thread);
+		}
+		//Ordena y muestra sólo los que tienen descendientes
+		Collections.sort(threadsList, new DumpThreadComparator());
+		return threadsList;
 	}
 }
