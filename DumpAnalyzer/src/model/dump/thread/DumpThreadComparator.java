@@ -23,12 +23,17 @@ public class DumpThreadComparator implements Comparator<DumpThread> {
 
 	public int compare(DumpThread o1, DumpThread o2) {
 		int descendantDifference = o2.getNumberOfDescendants()-o1.getNumberOfDescendants();
-		if(descendantDifference!=0){
+		if(descendantDifference != 0){
 			return descendantDifference;
 		}else{ //En caso de que tengan la misma cantidad de descendientes debe ordenar por estado
 			Integer value1 = (stateValueMap.get(o1.getState())!=null) ? stateValueMap.get(o1.getState()) : 1;
 			Integer value2 =  (stateValueMap.get(o2.getState())!=null) ? stateValueMap.get(o2.getState()) : 1;
-			return value2 - value1;
+			//En caso de que tengan el mismo estado y cantidad de descendientes, entonces ordena por id de mayor a menor
+			if(value2 - value1 == 0){
+				return o2.getId() - o1.getId();
+			}else{
+				return value2 - value1;
+			}
 		}
 	}
 
