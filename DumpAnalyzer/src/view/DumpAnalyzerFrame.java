@@ -10,6 +10,9 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -64,8 +67,25 @@ public class DumpAnalyzerFrame extends JFrame{
 		//Create a split pane with the two scroll panes in it.
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treePanel, statisticsScrollPane);
 		this.add(splitPane,BorderLayout.CENTER);
+		createMenu();
 	}
 	
+	private void createMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu helpMenu = new JMenu("Help");
+		menuBar.add(helpMenu);
+		JMenuItem aboutMenuItem = new JMenuItem("About");
+		aboutMenuItem.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				new AboutDialog(DumpAnalyzerFrame.this).setVisible(true);
+			}
+		});
+		helpMenu.add(aboutMenuItem);
+		this.setJMenuBar(menuBar);
+		
+	}
+
 	private void createStatisticsPanel() {
 		JPanel statisticsPanel = new JPanel(new BorderLayout());
 		statisticsPanel.setBorder(new TitledBorder("Statistics"));
@@ -86,7 +106,7 @@ public class DumpAnalyzerFrame extends JFrame{
 		openButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				int retVal = fileChooser.showOpenDialog(openButton);
+				int retVal = fileChooser.showOpenDialog(DumpAnalyzerFrame.this);
 				if(retVal == JFileChooser.APPROVE_OPTION){
 					try{
 						dump = new Dump();

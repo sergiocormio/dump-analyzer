@@ -11,4 +11,9 @@ public class ResourcesFactory {
 		public static Icon getOpenIcon(){
 			return new ImageIcon(ResourcesFactory.class.getResource("open-file.png"));
 		}
+		
+		//APP Image
+		public static Icon getAppImage() {
+			return new ImageIcon(ResourcesFactory.class.getResource("rigid_dump_truck 256.png"));
+		}
 }
