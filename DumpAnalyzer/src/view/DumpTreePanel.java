@@ -1,5 +1,7 @@
 package view;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.util.LinkedList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -8,6 +10,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -23,6 +28,7 @@ public class DumpTreePanel extends JPanel {
 	private JTree dumpTree;
 	private Dump dump;
 	private JTextArea completeText;
+	private LinkedList<Highlighting> highlightings;
 	private DumpThread selectedThread;
 	private JSplitPane splitPane;
 	private JScrollPane viewThreadScrollPane;
@@ -30,7 +36,24 @@ public class DumpTreePanel extends JPanel {
 	
 	public DumpTreePanel(Dump dump){
 		this.dump = dump;
+		loadHighlightings();
 		createUI();
+	}
+
+	/**
+	 * creates and load the highlightings
+	 */
+	private void loadHighlightings() {
+		highlightings = new LinkedList<Highlighting>();
+		//TODO delete this mock lines
+		highlightings.add(new Highlighting("ar.com.tsoluciones", Color.LIGHT_GRAY));
+		highlightings.add(new Highlighting("ERROR", Color.RED));
+		highlightings.add(new Highlighting("Exception", Color.RED));
+		highlightings.add(new Highlighting("BLOCKED", Color.RED));
+		highlightings.add(new Highlighting("WARN", Color.YELLOW));
+		highlightings.add(new Highlighting("WAITING", Color.YELLOW));
+		highlightings.add(new Highlighting("INFO", Color.GREEN));
+		highlightings.add(new Highlighting("runnable", Color.GREEN));
 	}
 
 	private void createUI() {
@@ -86,8 +109,52 @@ public class DumpTreePanel extends JPanel {
 			completeText.setText(selectedThread.getCompleteText());
 			//envia el scroll arriba de todo
 			completeText.setCaretPosition(0);
+			processHighlightings();
 		}
 		
+	}
+
+	private void processHighlightings() {
+		Highlighter highlighter = completeText.getHighlighter();
+		highlighter.removeAllHighlights();
+		if(completeText.getText().trim().isEmpty()){
+			return;
+		}
+		//Complete text in upper case
+		String text = completeText.getText().toUpperCase();
+		for(Highlighting highlighting : highlightings){
+			int lastIndex = -1;
+			try {
+				do{
+					lastIndex = text.indexOf(highlighting.getToken().toUpperCase(), lastIndex+1);
+					if(lastIndex>=0){
+						highlighter.addHighlight(getPreviousEnterIndex(text,lastIndex), text.indexOf("\n", lastIndex), new DefaultHighlighter.DefaultHighlightPainter(highlighting.getBackgroundColor()));
+					}
+				}while(lastIndex>=0);
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	/**
+	 * Returns the index of "\n" previous to index parameter in text
+	 * @param text
+	 * @param index
+	 * @return 
+	 */
+	private int getPreviousEnterIndex(String text, int index) {
+		int previousEnterIndex = -1;
+		int currentIndex = -1;
+		while(currentIndex < index){
+			previousEnterIndex = currentIndex;
+			currentIndex = text.indexOf("\n",currentIndex+1);
+		}
+		if(previousEnterIndex==-1){
+			return 0;
+		}
+		return previousEnterIndex;
 	}
 
 	private void loadTree() {
