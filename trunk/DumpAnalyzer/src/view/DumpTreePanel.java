@@ -117,7 +117,8 @@ public class DumpTreePanel extends JPanel {
 	private void processHighlightings() {
 		Highlighter highlighter = completeText.getHighlighter();
 		highlighter.removeAllHighlights();
-		if(completeText.getText().trim().isEmpty()){
+		//if completeText is empty
+		if(completeText.getText() == null || completeText.getText().trim().length() == 0){
 			return;
 		}
 		//Complete text in upper case
