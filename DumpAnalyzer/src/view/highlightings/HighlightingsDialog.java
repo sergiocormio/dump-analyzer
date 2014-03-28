@@ -3,6 +3,8 @@ package view.highlightings;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import resources.ResourcesFactory;
+
 public class HighlightingsDialog extends JDialog {
 	/**
 	 * 
@@ -14,6 +16,7 @@ public class HighlightingsDialog extends JDialog {
 		setLocationRelativeTo(owner);
 		setModal(true);
 		setTitle("Highlighting");
+		setIconImage(ResourcesFactory.getHighlightingIcon().getImage());
 	}
 
 
