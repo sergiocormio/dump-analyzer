@@ -1,10 +1,12 @@
 package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -19,9 +21,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import resources.ResourcesFactory;
+import view.highlightings.HighlightingsDialog;
 import model.dump.Dump;
 import model.parser.DumpParser;
 import model.parser.DumpStatistics;
@@ -99,40 +103,62 @@ public class DumpAnalyzerFrame extends JFrame{
 		fileChooser = new JFileChooser();
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
+		topPanel.setBorder(new EmptyBorder(2, 0, 2, 2));
+		
+		JPanel topLeftPanel = new JPanel();
+		topLeftPanel.setLayout(new FlowLayout(FlowLayout.CENTER,5,0));
 		
 		//Open Button
 		final JButton openButton = new JButton("Open Dump File",ResourcesFactory.getOpenIcon());
 		
 		openButton.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent arg0) {
 				int retVal = fileChooser.showOpenDialog(DumpAnalyzerFrame.this);
 				if(retVal == JFileChooser.APPROVE_OPTION){
-					try{
-						dump = new Dump();
-						parser.parse(dump, fileChooser.getSelectedFile());
-						pathTextField.setText(fileChooser.getSelectedFile().getPath());
-						treePanel.setDump(dump);
-						DumpStatistics dumpStatistics = new DumpStatistics(dump);
-						statisticsTextArea.setText(dumpStatistics.getStatistics());
-						//envia el scroll arriba de todo
-						statisticsTextArea.setCaretPosition(0);
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(DumpAnalyzerFrame.this, e.getMessage(), "Error al parsear el archivo de Dump", JOptionPane.ERROR_MESSAGE);
-						e.printStackTrace();
-					}
+					openDumpFile(fileChooser.getSelectedFile());
 				}
-				
 			}
 		});
 		
-		topPanel.add(openButton,BorderLayout.WEST);
+		topLeftPanel.add(openButton);
+		//Highlighting Button
+		final JButton adminHighlightingButton = new JButton("Highlighting",ResourcesFactory.getHighlightingIcon());
+		
+		adminHighlightingButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO complete
+				new HighlightingsDialog(DumpAnalyzerFrame.this).setVisible(true);
+			}
+		});
+		
+		topLeftPanel.add(adminHighlightingButton);
+		
+		topPanel.add(topLeftPanel,BorderLayout.WEST);
 		//TextField
 		pathTextField = new JTextField();
 		pathTextField.setEditable(false);
 		topPanel.add(pathTextField,BorderLayout.CENTER);
 		this.add(topPanel,BorderLayout.NORTH);
 		
+	}
+	
+	private void openDumpFile(File dumpFile){
+		try{
+			dump = new Dump();
+			parser.parse(dump, dumpFile);
+			pathTextField.setText(dumpFile.getPath());
+			treePanel.setDump(dump);
+			DumpStatistics dumpStatistics = new DumpStatistics(dump);
+			statisticsTextArea.setText(dumpStatistics.getStatistics());
+			//envia el scroll arriba de todo
+			statisticsTextArea.setCaretPosition(0);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(DumpAnalyzerFrame.this, e.getMessage(), "Error al parsear el archivo de Dump", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) throws IOException {

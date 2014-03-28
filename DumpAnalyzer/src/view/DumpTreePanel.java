@@ -1,6 +1,5 @@
 package view;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -18,6 +17,8 @@ import javax.swing.tree.DefaultTreeModel;
 
 import model.dump.Dump;
 import model.dump.thread.DumpThread;
+import view.highlightings.Highlighting;
+import view.highlightings.HighlightingPersistor;
 
 
 public class DumpTreePanel extends JPanel {
@@ -44,16 +45,7 @@ public class DumpTreePanel extends JPanel {
 	 * creates and load the highlightings
 	 */
 	private void loadHighlightings() {
-		highlightings = new LinkedList<Highlighting>();
-		//TODO delete this mock lines
-		highlightings.add(new Highlighting("ar.com.tsoluciones", Color.LIGHT_GRAY));
-		highlightings.add(new Highlighting("ERROR", Color.RED));
-		highlightings.add(new Highlighting("Exception", Color.RED));
-		highlightings.add(new Highlighting("BLOCKED", Color.RED));
-		highlightings.add(new Highlighting("WARN", Color.YELLOW));
-		highlightings.add(new Highlighting("WAITING", Color.YELLOW));
-		highlightings.add(new Highlighting("INFO", Color.GREEN));
-		highlightings.add(new Highlighting("runnable", Color.GREEN));
+		highlightings = new HighlightingPersistor().loadHighlightings();
 	}
 
 	private void createUI() {

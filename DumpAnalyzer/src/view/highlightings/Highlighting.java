@@ -1,4 +1,4 @@
-package view;
+package view.highlightings;
 
 import java.awt.Color;
 
