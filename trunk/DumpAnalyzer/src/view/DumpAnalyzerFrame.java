@@ -18,6 +18,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -33,6 +34,7 @@ import model.parser.DumpStatistics;
 
 public class DumpAnalyzerFrame extends JFrame{
 
+	private static final String APP_TITLE = "Dump Analyzer";
 	/**
 	 * 
 	 */
@@ -54,7 +56,7 @@ public class DumpAnalyzerFrame extends JFrame{
 	}
 
 	private void createUI() {
-		this.setTitle("Dump Analyzer");
+		this.setTitle(APP_TITLE);
 		setIconImage(ResourcesFactory.getDumpIcon().getImage());
 		setLayout(new BorderLayout(0,0));
 		setPreferredSize(new Dimension(800, 600));
@@ -74,11 +76,52 @@ public class DumpAnalyzerFrame extends JFrame{
 		createMenu();
 	}
 	
+	private void chooseDumpFile() {
+		int retVal = fileChooser.showOpenDialog(DumpAnalyzerFrame.this);
+		if(retVal == JFileChooser.APPROVE_OPTION){
+			openDumpFile(fileChooser.getSelectedFile());
+		}
+	}
+	
 	private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
+		//FILE
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		
+		//Open
+		JMenuItem openMenuItem = new JMenuItem("Open...");
+		openMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				chooseDumpFile();
+			}
+
+		});
+		fileMenu.add(openMenuItem);
+		
+		//SEPARATOR
+		fileMenu.add(new JSeparator());
+		
+		//Exit
+		JMenuItem exitMenuItem = new JMenuItem("Exit");
+		exitMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+
+		});
+		fileMenu.add(exitMenuItem);
+		
+		//HELP
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);
-		JMenuItem aboutMenuItem = new JMenuItem("About");
+		
+		//About
+		JMenuItem aboutMenuItem = new JMenuItem("About Dump Analyzer...");
 		aboutMenuItem.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
@@ -114,10 +157,7 @@ public class DumpAnalyzerFrame extends JFrame{
 		openButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				int retVal = fileChooser.showOpenDialog(DumpAnalyzerFrame.this);
-				if(retVal == JFileChooser.APPROVE_OPTION){
-					openDumpFile(fileChooser.getSelectedFile());
-				}
+				chooseDumpFile();
 			}
 		});
 		
@@ -155,6 +195,7 @@ public class DumpAnalyzerFrame extends JFrame{
 			statisticsTextArea.setText(dumpStatistics.getStatistics());
 			//envia el scroll arriba de todo
 			statisticsTextArea.setCaretPosition(0);
+			this.setTitle(dumpFile.getName() + " - " + APP_TITLE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(DumpAnalyzerFrame.this, e.getMessage(), "Error al parsear el archivo de Dump", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();

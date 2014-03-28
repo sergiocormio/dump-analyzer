@@ -21,7 +21,7 @@ public class ResourcesFactory {
 		}
 		
 		//Highlighting
-		public static Icon getHighlightingIcon() {
+		public static ImageIcon getHighlightingIcon() {
 			return new ImageIcon(ResourcesFactory.class.getResource("highlighter-text.png"));
 		}
 }
