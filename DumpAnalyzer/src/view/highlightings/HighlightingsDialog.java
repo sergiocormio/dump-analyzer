@@ -43,6 +43,7 @@ public class HighlightingsDialog extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 3825981838950942111L;
+	public static final String LIST_CHANGED_EVENT = "List_changed_event";
 	private JTable highlightingsTable;
 	private LinkedList<Highlighting> highlightings;
 	private JTextField tokenTextfield;
@@ -101,6 +102,9 @@ public class HighlightingsDialog extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//load highlightings again from user preferences
+				highlightings.clear();
+				highlightings.addAll(new HighlightingPersistor().loadHighlightings());
 				HighlightingsDialog.this.setVisible(false);
 				HighlightingsDialog.this.dispose();
 			}
@@ -143,6 +147,7 @@ public class HighlightingsDialog extends JDialog {
 					int selectedRow = highlightingsTable.getSelectedRow();
 					reloadTableData();
 					highlightingsTable.setRowSelectionInterval(selectedRow, selectedRow);
+					firePropertyChange(LIST_CHANGED_EVENT, null, null);
 				}
 			}
 			
@@ -180,7 +185,7 @@ public class HighlightingsDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Color initialColor = Color.red;
-				if(colorComboBox.getSelectedItem() == null){
+				if(colorComboBox.getSelectedItem() != null){
 					ColorItem colorItemSelected = (ColorItem) colorComboBox.getSelectedItem();
 					initialColor = colorItemSelected.getColor();
 				}
@@ -188,6 +193,7 @@ public class HighlightingsDialog extends JDialog {
 				if (newColor != null) {
 					customColorItem.setColor(newColor);
 					colorComboBox.setSelectedIndex(0);
+					colorComboBox.updateUI();
 				}
 			}
 			
@@ -209,6 +215,7 @@ public class HighlightingsDialog extends JDialog {
 		int selectedRow = highlightingsTable.getSelectedRow();
 		reloadTableData();
 		highlightingsTable.setRowSelectionInterval(selectedRow, selectedRow);
+		firePropertyChange(LIST_CHANGED_EVENT, null, null);
 	}
 
 	private void addTopButtonsPanel(JPanel mainPanel) {
@@ -220,6 +227,7 @@ public class HighlightingsDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				addNewHighlighting();
+				firePropertyChange(LIST_CHANGED_EVENT, null, null);
 			}
 		});
 		topButtonsPanel.add(addButton);
@@ -231,6 +239,7 @@ public class HighlightingsDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				deleteSelectedHighlighting();
+				firePropertyChange(LIST_CHANGED_EVENT, null, null);
 			}
 		});
 		topButtonsPanel.add(deleteButton);
@@ -242,6 +251,7 @@ public class HighlightingsDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				moveHighlightingSelectedUp();
+				firePropertyChange(LIST_CHANGED_EVENT, null, null);
 			}
 
 		});
@@ -254,6 +264,7 @@ public class HighlightingsDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				moveHighlightingSelectedDown();
+				firePropertyChange(LIST_CHANGED_EVENT, null, null);
 			}
 		});
 		topButtonsPanel.add(moveDownButton);
@@ -387,6 +398,15 @@ public class HighlightingsDialog extends JDialog {
 		}
 		tokenTextfield.setText(selectedHighlighting.getToken());
 		colorComboBox.setSelectedItem(new ColorItem(selectedHighlighting.getBackgroundColor(),""));
+		//if backgroundcolor there was not in comboBox, change "Custom" color
+		if(colorComboBox.getSelectedItem() != null){
+			ColorItem colorItemSelected = (ColorItem) colorComboBox.getSelectedItem();
+			if(!colorItemSelected.getColor().equals(selectedHighlighting.getBackgroundColor())){
+				customColorItem.setColor(selectedHighlighting.getBackgroundColor());
+				colorComboBox.setSelectedIndex(0);
+				colorComboBox.updateUI();
+			}
+		}
 	}
 
 	private void fixColumnsSize() {
