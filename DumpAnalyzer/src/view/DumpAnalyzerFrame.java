@@ -169,8 +169,7 @@ public class DumpAnalyzerFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO complete
-				new HighlightingsDialog(DumpAnalyzerFrame.this).setVisible(true);
+				new HighlightingsDialog(DumpAnalyzerFrame.this, DumpAnalyzerFrame.this.treePanel.getHighlightings()).setVisible(true);
 			}
 		});
 		
