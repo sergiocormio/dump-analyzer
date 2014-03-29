@@ -288,10 +288,12 @@ public class HighlightingsDialog extends JDialog {
 		}
 		highlightings.remove(selectedRow);
 		reloadTableData();
-		if(highlightings.size()>selectedRow){
-			highlightingsTable.setRowSelectionInterval(selectedRow, selectedRow);
-		}if(highlightings.size()>selectedRow-1){
-			highlightingsTable.setRowSelectionInterval(selectedRow-1, selectedRow-1);
+		if(highlightings.size()>0){
+			if(highlightings.size()>selectedRow){
+				highlightingsTable.setRowSelectionInterval(selectedRow, selectedRow);
+			}if(highlightings.size()>selectedRow-1){
+				highlightingsTable.setRowSelectionInterval(selectedRow-1, selectedRow-1);
+			}
 		}
 	}
 	

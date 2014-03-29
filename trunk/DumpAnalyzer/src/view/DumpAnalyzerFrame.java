@@ -2,6 +2,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -10,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -24,6 +27,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -76,8 +80,49 @@ public class DumpAnalyzerFrame extends JFrame{
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treePanel, statisticsScrollPane);
 		this.add(splitPane,BorderLayout.CENTER);
 		createMenu();
+		//prepare to open files via drag and drop
+		setDragAndDrop();
 	}
 	
+	private void setDragAndDrop() {
+		this.setTransferHandler(new TransferHandler(){
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -6410994042858912735L;
+			@Override
+	        public boolean canImport(TransferHandler.TransferSupport info) {
+	            return true;
+	        }
+
+	        @Override
+	        public boolean importData(TransferHandler.TransferSupport info) {
+	            if (!info.isDrop()) {
+	                return false;
+	            }
+
+	            // Get the fileList that is being dropped.
+	            Transferable t = info.getTransferable();
+	            List<File> data;
+	            try {
+	                data = (List<File>)t.getTransferData(DataFlavor.javaFileListFlavor);
+	            } 
+	            catch (Exception e) { 
+	            	return false; 
+	            }
+	           
+	            for (File file : data) {
+	                openDumpFile(file);
+	            }
+	            
+	            return true;
+	        }
+
+		});
+		
+	}
+
 	private void chooseDumpFile() {
 		int retVal = fileChooser.showOpenDialog(DumpAnalyzerFrame.this);
 		if(retVal == JFileChooser.APPROVE_OPTION){
@@ -209,7 +254,7 @@ public class DumpAnalyzerFrame extends JFrame{
 			statisticsTextArea.setCaretPosition(0);
 			this.setTitle(dumpFile.getName() + " - " + APP_TITLE);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(DumpAnalyzerFrame.this, e.getMessage(), "Error al parsear el archivo de Dump", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(DumpAnalyzerFrame.this, "Error parsing dump file: " + (dumpFile!=null?dumpFile.getName():""), "Error in Dump File", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
