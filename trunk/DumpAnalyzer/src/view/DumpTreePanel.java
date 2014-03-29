@@ -30,6 +30,10 @@ public class DumpTreePanel extends JPanel {
 	private Dump dump;
 	private JTextArea completeText;
 	private LinkedList<Highlighting> highlightings;
+	public LinkedList<Highlighting> getHighlightings() {
+		return highlightings;
+	}
+
 	private DumpThread selectedThread;
 	private JSplitPane splitPane;
 	private JScrollPane viewThreadScrollPane;

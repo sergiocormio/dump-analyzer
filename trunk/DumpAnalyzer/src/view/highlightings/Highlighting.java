@@ -23,4 +23,10 @@ public class Highlighting {
 	public void setToken(String token) {
 		this.token = token;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Highlighting otherObj = (Highlighting) obj;
+		return token.equals(otherObj.getToken()) && backgroundColor.equals(otherObj.getBackgroundColor());
+	}
 }

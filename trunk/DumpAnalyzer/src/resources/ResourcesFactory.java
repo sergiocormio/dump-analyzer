@@ -24,4 +24,8 @@ public class ResourcesFactory {
 		public static ImageIcon getHighlightingIcon() {
 			return new ImageIcon(ResourcesFactory.class.getResource("highlighter-text.png"));
 		}
+
+		public static Icon getColorEditIcon() {
+			return new ImageIcon(ResourcesFactory.class.getResource("color--pencil.png"));
+		}
 }
