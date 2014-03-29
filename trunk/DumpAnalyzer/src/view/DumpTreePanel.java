@@ -110,7 +110,7 @@ public class DumpTreePanel extends JPanel {
 		
 	}
 
-	private void processHighlightings() {
+	public void processHighlightings() {
 		Highlighter highlighter = completeText.getHighlighter();
 		highlighter.removeAllHighlights();
 		//if completeText is empty
@@ -122,17 +122,27 @@ public class DumpTreePanel extends JPanel {
 		for(Highlighting highlighting : highlightings){
 			int lastIndex = -1;
 			try {
-				do{
-					lastIndex = text.indexOf(highlighting.getToken().toUpperCase(), lastIndex+1);
-					if(lastIndex>=0){
-						highlighter.addHighlight(getPreviousEnterIndex(text,lastIndex), text.indexOf("\n", lastIndex), new DefaultHighlighter.DefaultHighlightPainter(highlighting.getBackgroundColor()));
-					}
-				}while(lastIndex>=0);
+				if(highlighting.getToken() != null && highlighting.getToken().trim().length()>0){
+					do{
+						lastIndex = text.indexOf(highlighting.getToken().trim().toUpperCase(), lastIndex+1);
+						if(lastIndex>=0){
+							highlighter.addHighlight(getPreviousEnterIndex(text,lastIndex), getNextEnterIndex(text, lastIndex), new DefaultHighlighter.DefaultHighlightPainter(highlighting.getBackgroundColor()));
+						}
+					}while(lastIndex>=0);
+				}
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
 		}
 		
+	}
+
+	private int getNextEnterIndex(String text, int index) {
+		int nextEnterIndex = text.indexOf("\n", index);
+		if(nextEnterIndex==-1){
+			nextEnterIndex = text.length();
+		}
+		return nextEnterIndex;
 	}
 
 	/**
@@ -147,6 +157,9 @@ public class DumpTreePanel extends JPanel {
 		while(currentIndex < index){
 			previousEnterIndex = currentIndex;
 			currentIndex = text.indexOf("\n",currentIndex+1);
+			if(currentIndex==-1){ //There is no enter previous
+				break;
+			}
 		}
 		if(previousEnterIndex==-1){
 			return 0;

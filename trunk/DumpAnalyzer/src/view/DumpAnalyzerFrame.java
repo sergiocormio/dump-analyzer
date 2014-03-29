@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -169,7 +171,18 @@ public class DumpAnalyzerFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new HighlightingsDialog(DumpAnalyzerFrame.this, DumpAnalyzerFrame.this.treePanel.getHighlightings()).setVisible(true);
+				HighlightingsDialog highlightingsDialog = new HighlightingsDialog(DumpAnalyzerFrame.this, DumpAnalyzerFrame.this.treePanel.getHighlightings());
+				highlightingsDialog.addPropertyChangeListener(HighlightingsDialog.LIST_CHANGED_EVENT, new PropertyChangeListener() {
+					
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						if(evt.getPropertyName().equals(HighlightingsDialog.LIST_CHANGED_EVENT)){
+							DumpAnalyzerFrame.this.treePanel.processHighlightings();
+						}
+					}
+				});
+				highlightingsDialog.setVisible(true);
+				DumpAnalyzerFrame.this.treePanel.processHighlightings();
 			}
 		});
 		
