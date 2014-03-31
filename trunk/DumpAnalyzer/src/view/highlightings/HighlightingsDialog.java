@@ -47,7 +47,7 @@ public class HighlightingsDialog extends JDialog {
 	private JTable highlightingsTable;
 	private LinkedList<Highlighting> highlightings;
 	private JTextField tokenTextfield;
-	private JComboBox<ColorItem> colorComboBox;
+	private JComboBox colorComboBox;
 	private JPanel dialogPanel;
 	private ColorItem customColorItem;
 
@@ -167,7 +167,7 @@ public class HighlightingsDialog extends JDialog {
 		customColorItem = new ColorItem(Color.decode("#00FFCC"), "Custom");
 		elements.add(customColorItem);
 		elements.addAll(ColorItem.getDefaultColorItems());
-		colorComboBox = new JComboBox<ColorItem>(elements.toArray(new ColorItem[elements.size()]));
+		colorComboBox = new JComboBox(elements.toArray(new ColorItem[elements.size()]));
 		colorComboBox.setRenderer(new ColorItemComboRenderer());
 		colorComboBox.addActionListener(new ActionListener() {
 			
