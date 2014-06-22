@@ -5,13 +5,9 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -28,7 +24,8 @@ public class DumpTreePanel extends JPanel {
 	private static final long serialVersionUID = -5636154388264725732L;
 	private JTree dumpTree;
 	private Dump dump;
-	private JTextArea completeText;
+//	private JTextArea completeText;
+	private ViewThreadPanel viewThreadPanel; //individual thread (complete text)
 	private LinkedList<Highlighting> highlightings;
 	public LinkedList<Highlighting> getHighlightings() {
 		return highlightings;
@@ -36,7 +33,6 @@ public class DumpTreePanel extends JPanel {
 
 	private DumpThread selectedThread;
 	private JSplitPane splitPane;
-	private JScrollPane viewThreadScrollPane;
 	private JScrollPane dumpTreeScrollPane;
 	
 	public DumpTreePanel(Dump dump){
@@ -58,7 +54,7 @@ public class DumpTreePanel extends JPanel {
 		createViewThreadPanel();
 		//Create a split pane with the two scroll panes in it.
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				dumpTreeScrollPane, viewThreadScrollPane);
+				dumpTreeScrollPane, viewThreadPanel);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
 		splitPane.setDividerLocation(600);
@@ -66,9 +62,7 @@ public class DumpTreePanel extends JPanel {
 	}
 
 	private void createViewThreadPanel() {
-		completeText = new JTextArea();
-		completeText.setEditable(false);
-		viewThreadScrollPane = new JScrollPane(completeText);
+		viewThreadPanel = new ViewThreadPanel(this);
 	}
 
 	private void createTreePanel() {
@@ -100,72 +94,16 @@ public class DumpTreePanel extends JPanel {
 	}
 	
 	private void updateViewThreadPanel() {
-		completeText.setText("");
+		viewThreadPanel.setThreadToShow(selectedThread);
 		if(selectedThread!=null){
-			completeText.setText(selectedThread.getCompleteText());
-			//envia el scroll arriba de todo
-			completeText.setCaretPosition(0);
 			processHighlightings();
 		}
-		
 	}
 
 	public void processHighlightings() {
-		Highlighter highlighter = completeText.getHighlighter();
-		highlighter.removeAllHighlights();
-		//if completeText is empty
-		if(completeText.getText() == null || completeText.getText().trim().length() == 0){
-			return;
-		}
-		//Complete text in upper case
-		String text = completeText.getText().toUpperCase();
-		for(Highlighting highlighting : highlightings){
-			int lastIndex = -1;
-			try {
-				if(highlighting.getToken() != null && highlighting.getToken().trim().length()>0){
-					do{
-						lastIndex = text.indexOf(highlighting.getToken().trim().toUpperCase(), lastIndex+1);
-						if(lastIndex>=0){
-							highlighter.addHighlight(getPreviousEnterIndex(text,lastIndex), getNextEnterIndex(text, lastIndex), new DefaultHighlighter.DefaultHighlightPainter(highlighting.getBackgroundColor()));
-						}
-					}while(lastIndex>=0);
-				}
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-		}
-		
+		viewThreadPanel.processHighlightings();
 	}
 
-	private int getNextEnterIndex(String text, int index) {
-		int nextEnterIndex = text.indexOf("\n", index);
-		if(nextEnterIndex==-1){
-			nextEnterIndex = text.length();
-		}
-		return nextEnterIndex;
-	}
-
-	/**
-	 * Returns the index of "\n" previous to index parameter in text
-	 * @param text
-	 * @param index
-	 * @return 
-	 */
-	private int getPreviousEnterIndex(String text, int index) {
-		int previousEnterIndex = -1;
-		int currentIndex = -1;
-		while(currentIndex < index){
-			previousEnterIndex = currentIndex;
-			currentIndex = text.indexOf("\n",currentIndex+1);
-			if(currentIndex==-1){ //There is no enter previous
-				break;
-			}
-		}
-		if(previousEnterIndex==-1){
-			return 0;
-		}
-		return previousEnterIndex;
-	}
 
 	private void loadTree() {
 		//load tree
