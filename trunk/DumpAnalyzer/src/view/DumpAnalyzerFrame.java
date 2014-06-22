@@ -233,6 +233,17 @@ public class DumpAnalyzerFrame extends JFrame{
 		
 		topLeftPanel.add(adminHighlightingButton);
 		
+		//Find or search button
+		JButton findButton = new JButton("Find",ResourcesFactory.getFindIcon());
+		findButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showFindDialog();
+			}
+		});
+		topLeftPanel.add(findButton);
+		
 		topPanel.add(topLeftPanel,BorderLayout.WEST);
 		//TextField
 		pathTextField = new JTextField();
@@ -242,6 +253,10 @@ public class DumpAnalyzerFrame extends JFrame{
 		
 	}
 	
+	protected void showFindDialog() {
+		treePanel.showFindDialog();
+	}
+
 	private void openDumpFile(File dumpFile){
 		try{
 			dump = new Dump();

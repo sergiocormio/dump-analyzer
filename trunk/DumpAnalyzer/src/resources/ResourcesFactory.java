@@ -20,6 +20,11 @@ public class ResourcesFactory {
 			return new ImageIcon(ResourcesFactory.class.getResource("rigid_dump_truck 256.png"));
 		}
 		
+		//Find
+		public static ImageIcon getFindIcon() {
+			return new ImageIcon(ResourcesFactory.class.getResource("find.png"));
+		}
+		
 		//Highlighting
 		public static ImageIcon getHighlightingIcon() {
 			return new ImageIcon(ResourcesFactory.class.getResource("highlighter-text.png"));
