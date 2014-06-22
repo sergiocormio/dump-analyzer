@@ -148,4 +148,8 @@ public class DumpTreePanel extends JPanel {
 		dumpTree.updateUI();
 	}
 
+	public void showFindDialog() {
+		viewThreadPanel.showFindDialog();
+	}
+
 }
