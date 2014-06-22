@@ -20,7 +20,7 @@ public class AboutDialog extends JDialog {
 	private static final String EMAIL = "sergiocormio@gmail.com";
 	private static final String YEAR_AND_CREATOR = "2014 - Sergio A. Cormio";
 	private static final String DESCRIPTION = "This is a simple Analyzer of Tomcat's dump files. Made in JAVA using Swing.";
-	private static final String NAME_AND_VERSION = "Dump Analyzer Version 1.1";
+	private static final String NAME_AND_VERSION = "Dump Analyzer Version 1.2";
 	/**
 	 * 
 	 */
