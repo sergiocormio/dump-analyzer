@@ -2,11 +2,9 @@
 # dump-analyzer
 This is a simple Analyzer of Tomcat's dump files. Made in JAVA using Swing.
 
-Download it right now from: Java-Apps.org http://java-apps.org/content/show.php?content=164188
+Download it right now from: https://github.com/sergiocormio/dump-analyzer/blob/master/DumpAnalyzer/releases/dumpanalyzer.exe
 
 ## Changelog: ##
-
----
 
 Version 1.2
   * Added: New feature "Find" text in thread
